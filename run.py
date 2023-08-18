@@ -16,21 +16,19 @@ SHEET = GSPREAD_CLIENT.open('love_sandwiches')
 
 def get_sales_data():
     """
-    Get sales figures input from the user
+    Get sales figures input from the user.
     Run a while loop to collect a valid string of data from the user
-    via the terminal, which must be a string of 6 numbers separated by commas.
-    The loop will repeatedly request data until it is valid.
+    via the terminal, which must be a string of 6 numbers separated
+    by commas. The loop will repeatedly request data, until it is valid.
     """
     while True:
-
         print("Please enter sales data from the last market.")
         print("Data should be six numbers, separated by commas.")
-        print("Example: 10, 20, 30, 40, 50, 60\n")
+        print("Example: 10,20,30,40,50,60\n")
 
         data_str = input("Enter your data here: ")
 
         sales_data = data_str.split(",")
-        validate_data(sales_data)
 
         if validate_data(sales_data):
             print("Data is valid!")
@@ -41,8 +39,8 @@ def get_sales_data():
 
 def validate_data(values):
     """
-    Inside the try, converts all strings into integers.
-    Raises ValueError if strings cannot be converted into int, 
+    Inside the try, converts all string values into integers.
+    Raises ValueError if strings cannot be converted into int,
     or if there aren't exactly 6 values.
     """
     try:
@@ -57,6 +55,7 @@ def validate_data(values):
 
     return True
 
+
 def update_worksheet(data, worksheet):
     """
     Receives a list of integers to be inserted into a worksheet
@@ -65,7 +64,7 @@ def update_worksheet(data, worksheet):
     print(f"Updating {worksheet} worksheet...\n")
     worksheet_to_update = SHEET.worksheet(worksheet)
     worksheet_to_update.append_row(data)
-    print(f"{worksheet} worksheet updated successfully!\n")
+    print(f"{worksheet} worksheet updated successfully\n")
 
 
 def calculate_surplus_data(sales_row):
@@ -73,20 +72,20 @@ def calculate_surplus_data(sales_row):
     Compare sales with stock and calculate the surplus for each item type.
 
     The surplus is defined as the sales figure subtracted from the stock:
-    -Positive surplus indicates waste
-    -negative surplus indicates extra made sandwiches when stock sold out
+    - Positive surplus indicates waste
+    - Negative surplus indicates extra made when stock was sold out.
     """
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]
     
-
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
         surplus = int(stock) - sales
         surplus_data.append(surplus)
 
     return surplus_data
+
 
 def get_last_5_entries_sales():
     """
@@ -100,10 +99,8 @@ def get_last_5_entries_sales():
     for ind in range(1, 7):
         column = sales.col_values(ind)
         columns.append(column[-5:])
-    
+
     return columns
-
-
 
 
 def main():
@@ -117,6 +114,6 @@ def main():
     update_worksheet(new_surplus_data, "surplus")
 
 
-print("Welcome to Love Sandwiches Data Automation\n")
+print("Welcome to Love Sandwiches Data Automation")
 # main()
 sales_columns = get_last_5_entries_sales()
